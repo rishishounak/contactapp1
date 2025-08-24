@@ -1,0 +1,66 @@
+{
+  "response": {
+    "email": [
+      "alice@example.com",
+      "wendy@example.com"
+    ],
+    "phoneNumber": "1234567890"
+  },
+  "message": "Full contact database content included below.",
+  "contactsDB": {
+    "1": {
+      "email": "alice@example.com",
+      "phoneNumber": "1234567890",
+      "linkPrecedence": "primary",
+      "linkedId": null,
+      "createdAt": "2025-08-24T20:38:56.413Z",
+      "updatedAt": "2025-08-24T20:38:56.413Z",
+      "deletedAt": null
+    },
+    "2": {
+      "email": "bob@example.com",
+      "phoneNumber": null,
+      "linkPrecedence": "secondary",
+      "linkedId": 1,
+      "createdAt": "2025-08-24T20:38:56.784Z",
+      "updatedAt": "2025-08-24T20:38:56.784Z",
+      "deletedAt": null
+    },
+    "3": {
+      "email": null,
+      "phoneNumber": "1234567891",
+      "linkPrecedence": "secondary",
+      "linkedId": 1,
+      "createdAt": "2025-08-24T20:40:15.958Z",
+      "updatedAt": "2025-08-24T20:40:15.958Z",
+      "deletedAt": null
+    },
+    "4": {
+      "email": null,
+      "phoneNumber": "1234567893",
+      "linkPrecedence": "secondary",
+      "linkedId": 1,
+      "createdAt": "2025-08-24T20:40:59.713Z",
+      "updatedAt": "2025-08-24T20:40:59.713Z",
+      "deletedAt": null
+    },
+    "5": {
+      "email": null,
+      "phoneNumber": "1112223333",
+      "linkPrecedence": "secondary",
+      "linkedId": 1,
+      "createdAt": "2025-08-24T20:56:46.340Z",
+      "updatedAt": "2025-08-24T20:56:46.340Z",
+      "deletedAt": null
+    },
+    "6": {
+      "email": null,
+      "phoneNumber": "1334567890",
+      "linkPrecedence": "secondary",
+      "linkedId": 1,
+      "createdAt": "2025-08-24T20:59:02.448Z",
+      "updatedAt": "2025-08-24T20:59:02.448Z",
+      "deletedAt": null
+    }
+  }
+}
