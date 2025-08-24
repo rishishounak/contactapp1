@@ -1,9 +1,6 @@
-// server.js
 import express from "express";
 import bodyParser from "body-parser";
 import { Op } from "sequelize";
-import fs from "fs";
-import path from "path";
 import { sequelize } from "./models/index.js";
 import { Contact } from "./models/contact.js";
 
@@ -20,7 +17,7 @@ app.post("/identify", async (req, res) => {
       return res.status(400).json({ error: "Provide both email and phoneNumber" });
     }
 
-    // Find contacts matching either email or phoneNumber
+    // Find matching contacts
     const matchedContacts = await Contact.findAll({
       where: {
         [Op.or]: [{ email }, { phoneNumber }],
@@ -34,11 +31,8 @@ app.post("/identify", async (req, res) => {
     let response;
 
     if (matchedContacts.length === 0) {
-      // Unique entry → insert into DB
-      await Contact.create(
-        { email, phoneNumber, linkPrecedence: "primary" },
-        { transaction: t }
-      );
+      // Unique entry → insert
+      await Contact.create({ email, phoneNumber, linkPrecedence: "primary" }, { transaction: t });
       response = { message: "Unique entry. Added to database." };
     } else {
       const emailsSet = new Set();
@@ -50,54 +44,21 @@ app.post("/identify", async (req, res) => {
       });
 
       if (emailsSet.has(email)) {
-        phonesSet.add(phoneNumber);
-        response = {
-          email: email,
-          phoneNumber: Array.from(phonesSet),
-        };
+        phonesSet.add(phoneNumber); // include current input
+        response = { email, phoneNumber: Array.from(phonesSet) };
       } else if (phonesSet.has(phoneNumber)) {
-        emailsSet.add(email);
-        response = {
-          email: Array.from(emailsSet),
-          phoneNumber: phoneNumber,
-        };
+        emailsSet.add(email); // include current input
+        response = { email: Array.from(emailsSet), phoneNumber };
       } else {
+        // Rare fallback
+        await Contact.create({ email, phoneNumber, linkPrecedence: "primary" }, { transaction: t });
         response = { message: "Unique entry. Added to database." };
-        await Contact.create(
-          { email, phoneNumber, linkPrecedence: "primary" },
-          { transaction: t }
-        );
       }
     }
 
-    // Get full DB content
-    const allContacts = await Contact.findAll({ transaction: t });
-    const dbContent = {};
-    allContacts.forEach(c => {
-      dbContent[c.id] = {
-        email: c.email,
-        phoneNumber: c.phoneNumber,
-        linkPrecedence: c.linkPrecedence,
-        linkedId: c.linkedId,
-        createdAt: c.createdAt,
-        updatedAt: c.updatedAt,
-        deletedAt: c.deletedAt,
-      };
-    });
-
-    // Combine response and DB snapshot
-    const output = {
-      response,
-      message: "Full contact database content included below.",
-      contactsDB: dbContent,
-    };
-
-    // Write to output.txt
-    const filePath = path.join(process.cwd(), "output.txt");
-    fs.writeFileSync(filePath, JSON.stringify(output, null, 2), "utf-8");
-
     await t.commit();
-    res.json(output);
+    res.json(response); // send only relevant output
+
   } catch (err) {
     await t.rollback();
     console.error(err);

@@ -1,9 +1,8 @@
 @echo off
+REM Test deployed /identify endpoint
 
-REM Test single example: email and phone number already exist separately in DB
-curl -X POST http://localhost:3000/identify ^
+curl -X POST https://contactapp1-fpwu.onrender.com/identify ^
 -H "Content-Type: application/json" ^
--d "{\"email\":\"wendy@example.com\",\"phoneNumber\":\"1234567890\"}"
-echo.
-echo Request sent. Check output.txt for the response.
+-d "{\"email\":\"bony@example.com\",\"phoneNumber\":\"1234567890\"}"
+
 pause
